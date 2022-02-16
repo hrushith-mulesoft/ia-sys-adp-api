@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="0d969d1d-fb86-4437-901a-5618475b4d5d" basePath="/api/" >
+		<http:request-connection host="prc-hr-api.us-e2.cloudhub.io" />
+	</http:request-config>
+	<flow name="getOfficeLocationsFlow" doc:id="7d0855ea-e9a7-49fc-9521-c17624850d1c" >
+		<http:request method="GET" doc:name="Request" doc:id="cde9ea9d-9d0e-470e-8483-bc4b1ba23a94" config-ref="HTTP_Request_configuration" path="officeLocations">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"client_secret" : "690AbEDbab4B497380DB59e60280B8e7",
+	"client_id" : "6b566bb2728f464e8882263ff0000a9c"
+}]]]></http:headers>
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"office_id" : "123456"
+}]]]></http:query-params>
+		</http:request>
+	</flow>
+</mule>
