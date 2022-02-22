@@ -1,6 +1,6 @@
 %dw 2.0
 
-type auto_2d04c640_4de0_4ef3_bf87_d1aae7d9ded5_Input_Attributes = {|
+type auto_06eaf71b_ef87_4f9e_8a11_3f7a0d055eab_Input_Attributes = {|
   clientCertificate?: {|
     publicKey?: {|  |}, 
     "type"?: String, 
@@ -12,7 +12,7 @@ type auto_2d04c640_4de0_4ef3_bf87_d1aae7d9ded5_Input_Attributes = {|
   |}, 
   listenerPath: String, 
   method: String, 
-  queryParams: {| employee_id: String |}, 
+  queryParams: {|  |}, 
   queryString: String, 
   relativePath: String, 
   remoteAddress: String, 

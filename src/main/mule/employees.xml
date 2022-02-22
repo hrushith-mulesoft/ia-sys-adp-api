@@ -1,29 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-	<flow name="getEmployeesFlow" doc:id="2d04c640-4de0-4ef3-bf87-d1aae7d9ded5" >
-		<ee:transform doc:name="Transform Message" doc:id="0887723f-4f67-4e62-9b74-320c1cfa40fe" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<os:object-store name="employees_db" doc:name="Object store" doc:id="b2399bcc-d380-4a89-a7b8-161c1291e4de" maxEntries="1000" entryTtl="5" entryTtlUnit="HOURS" />
+	<os:object-store name="employees_os" doc:name="Object store" doc:id="01c340b8-655e-48c7-b071-bff3c81090a7" maxEntries="1000" entryTtl="5" entryTtlUnit="HOURS" />
+	<file:config name="File_Config" doc:name="File Config" doc:id="57564953-d3aa-4037-94a9-6c5385cfe78a" >
+		<file:connection workingDir="C:\Users\DeepBlue\OneDrive\Documents\GitHub\ia-sys-adp-api\db" />
+	</file:config>
+	<sub-flow name="write-to-file" doc:id="60d2d4b0-1e48-4fa2-80af-71c745fd36bd" >
+		<file:write doc:name="Write" doc:id="71cb4f01-c0b1-403f-b69d-ce4ea909f3c9" config-ref="File_Config" path="C:\Users\DeepBlue\OneDrive\Documents\GitHub\ia-sys-adp-api\db\employeesData.json" mode="APPEND" />
+	</sub-flow>
+	<flow name="retrieve-employees" doc:id="171e96b5-29b4-43ea-9c26-f3294ee0c802" >
+		<ee:transform doc:name="Set Variables" doc:id="bbd8c05a-3537-4ad6-a3f0-f089894c5407">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 {
 }]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="result"><![CDATA[%dw 2.0
+output application/json
+---
+[
+	
+]]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<os:retrieve-all-keys doc:name="Retrieve all keys" doc:id="364a6c57-8cd2-4a81-afb1-c221a5f0147b" objectStore="employees_db"/>
+		<foreach doc:name="For Each" doc:id="0cc73a80-2547-43a5-b030-fa81310cbfe3" collection="#[payload]">
+			<os:retrieve doc:name="Retrieve" doc:id="36d7e65e-869a-4f90-a4c0-51f4a64f1eb9" key="#[payload]" objectStore="employees_db" target="retrievedValue" />
+			<ee:transform doc:name="Transform Message" doc:id="ff5a3e71-6610-44af-b9fc-e06c329bf91b">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="result"><![CDATA[%dw 2.0
+output application/json
+---
+vars.result << vars.retrievedValue]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</foreach>
+		<ee:transform doc:name="Transform Message" doc:id="dd241f9f-b2c6-46f9-a3c1-d1b2dbfe72ad" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.result]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</flow>
-	<flow name="postEmployeesFlow" doc:id="4b9e77da-f269-4f78-9ade-eacd76755ca1" >
-		<ee:transform doc:name="Transform Message" doc:id="17a2e527-e246-45e3-a01e-aaa0a16452ac" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
+	<flow name="add-employees" doc:id="c7bd9858-0ea7-4f7c-ac51-e9c1d0c71ae7" >
+		<foreach doc:name="For Each" doc:id="f2a0ae4a-337e-4bb8-9437-634c3af0baa6" collection="#[payload]">
+			<os:store doc:name="Store" doc:id="1b8168f6-570e-46c9-a385-b81e58ab4a01" key="#[payload.first_name]" objectStore="employees_db" />
+			<ee:transform doc:name="Transform Message" doc:id="f26f5578-9500-47b9-8de0-35d10bed287b">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-{
-}]]></ee:set-payload>
+payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		</foreach>
+	</flow>
+	<flow name="delete-employees" doc:id="06eaf71b-ef87-4f9e-8a11-3f7a0d055eab" >
+		<os:clear doc:name="Clear" doc:id="4ed1f56b-6abb-470e-8bbd-427cb5f25816" objectStore="employees_db"/>
 	</flow>
 </mule>
