@@ -8,7 +8,6 @@ http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/cu
 http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
 http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
 	<os:object-store name="employees_db" doc:name="Object store" doc:id="b2399bcc-d380-4a89-a7b8-161c1291e4de" maxEntries="1000" entryTtl="5" entryTtlUnit="HOURS" />
-	<os:object-store name="employees_os" doc:name="Object store" doc:id="01c340b8-655e-48c7-b071-bff3c81090a7" maxEntries="1000" entryTtl="5" entryTtlUnit="HOURS" />
 	<file:config name="File_Config" doc:name="File Config" doc:id="57564953-d3aa-4037-94a9-6c5385cfe78a" >
 		<file:connection workingDir="C:\Users\DeepBlue\OneDrive\Documents\GitHub\ia-sys-adp-api\db" />
 	</file:config>
