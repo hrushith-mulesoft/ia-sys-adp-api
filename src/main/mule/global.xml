@@ -8,5 +8,5 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 	<http:listener-config name="ia-sys-adp-api-httpListenerConfig" doc:name="HTTP Listener config" doc:id="6067e5d5-69e5-4481-8bba-27517cbe2c0b" >
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
-	<api-gateway:autodiscovery apiId="17637575" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="f622026e-233f-41b9-a3d6-e78126a59c7b" flowRef="ia-sys-adp-api-main" />
+	<api-gateway:autodiscovery apiId="17890852" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="f622026e-233f-41b9-a3d6-e78126a59c7b" flowRef="ia-sys-adp-api-main" />
 </mule>

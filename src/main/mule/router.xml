@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
-    <apikit:config name="ia-sys-adp-api-config" api="resource::f63a4349-ce64-4db1-9509-c9fb8504dc3b:ia-sys-adp-api:1.0.2:raml:zip:ia-sys-adp-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="ia-sys-adp-api-config" api="resource::f1af8f1a-f6fb-4a4a-9d89-c95224fc9a1b:ia-sys-adp-api:1.0.0:raml:zip:ia-sys-adp-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="ia-sys-adp-api-main">
-        <http:listener path="/api/*" config-ref="ia-sys-adp-api-httpListenerConfig">
+        <http:listener config-ref="ia-sys-adp-api-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:response>
             <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:body><![CDATA[#[payload]]]></http:body>
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:error-response>
         </http:listener>
         <apikit:router config-ref="ia-sys-adp-api-config" />
@@ -94,13 +94,13 @@ output application/json
         </error-handler>
     </flow>
     <flow name="ia-sys-adp-api-console">
-        <http:listener path="/console/*" config-ref="ia-sys-adp-api-httpListenerConfig">
+        <http:listener config-ref="ia-sys-adp-api-httpListenerConfig" path="/console/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:response>
             <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:body><![CDATA[#[payload]]]></http:body>
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:error-response>
         </http:listener>
         <apikit:console config-ref="ia-sys-adp-api-config" />
@@ -120,32 +120,22 @@ output application/json
             </on-error-propagate>
         </error-handler>
     </flow>
+    <flow name="delete:\employees:ia-sys-adp-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="a71a524a-16dc-4ab7-a76c-e119be0a6dd8" name="delete-employees" />
+    </flow>
     <flow name="get:\contractors:ia-sys-adp-api-config">
-        <flow-ref doc:name="Flow Reference" doc:id="96030bb0-04fd-4762-b4ce-598d2eeed351" name="retrieve-contractors" />
+        <flow-ref doc:name="Flow Reference" doc:id="a868d344-67eb-4bb8-abab-e4f75f028a1c" name="retrieve-contractors" />
     </flow>
     <flow name="get:\employees:ia-sys-adp-api-config">
-        <flow-ref doc:name="Flow Reference" doc:id="df4f8a9c-4795-4821-b27f-848afe0ac851" name="retrieve-employees" />
+        <flow-ref doc:name="Flow Reference" doc:id="0bde359a-c337-490d-bc50-8f1068ab63d8" name="retrieve-employees" />
     </flow>
     <flow name="get:\officeLocations:ia-sys-adp-api-config">
-        <flow-ref doc:name="Flow Reference" doc:id="15bf2de8-2a0e-4847-8d5d-4a12caf2aa24" name="office-locations" />
+        <flow-ref doc:name="Flow Reference" doc:id="c355e8aa-e3f2-4b5f-8e4d-9886a29658f1" name="office-locations" />
     </flow>
     <flow name="post:\contractors:ia-sys-adp-api-config">
-        <flow-ref doc:name="Flow Reference" doc:id="288f723f-30f1-4c84-9cbf-c881fcaf2ba1" name="add-contractors" />
+        <flow-ref doc:name="Flow Reference" doc:id="e45d3471-c8df-49d0-87b9-17bf4e2a1cea" name="add-contractors" />
     </flow>
-    <flow name="post:\employees:ia-sys-adp-api-config" doc:id="45c46699-12e4-4681-b3c1-9a4872c89831">
-        <flow-ref doc:name="Flow Reference" doc:id="29f6aad8-4cb6-454f-b99a-7d55c24f558d" name="add-employees" />
-    </flow>
-    <flow name="delete:\employees:ia-sys-adp-api-config">
-        <flow-ref doc:name="Flow Reference" doc:id="69e289f1-9cbe-4bd2-80e5-f89d4568d632" name="delete-employees" />
-		<ee:transform>
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  message: "Employees deleted"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+    <flow name="post:\employees:ia-sys-adp-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="dc38e3fa-4686-4b7e-a293-1076a4b2627d" name="add-employees" />
     </flow>
 </mule>
