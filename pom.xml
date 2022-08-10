@@ -68,7 +68,7 @@
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
-			<groupId>f1af8f1a-f6fb-4a4a-9d89-c95224fc9a1b</groupId>
+			<groupId>877440e1-ab2b-4ddc-82ee-dd01df5e9874</groupId>
 			<artifactId>ia-sys-adp-api</artifactId>
 			<version>1.0.0</version>
 			<classifier>raml</classifier>
